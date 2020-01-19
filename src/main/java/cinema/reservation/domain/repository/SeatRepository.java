@@ -10,13 +10,15 @@ public interface SeatRepository {
 
     List<Seat> findAll();
 
+    List<Seat> findByCinemaId(Long cinemaId);
+
+    List<Seat> findByHallId(Long hallId);
+
     Optional<Seat> findById(long id);
 
-    List<Seat> findByStatus(Status status);
+    Seat save(Seat seat);
 
-    Seat save(Status status);
-
-    void update(long id, Status status);
+    void update(Long cinemaId, Long hallId, Long id, Status status);
 
     void deleteAll();
 }

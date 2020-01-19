@@ -13,14 +13,9 @@
         <br>password: postgres
     </li>
     <li>
-        <h4>install jdk 11</h4>        
+        go to ./cinema-reservation
     </li>
-    <li>
-        <h4>open project with some IDE and select JDK 11 as project JDK</h4>    
-    </li>
-    <li>
-        <h4>run Application.main</h4>
-    </li>
+    <li>run command <strong>gradlew run</strong></li>
 </ul>
     
  

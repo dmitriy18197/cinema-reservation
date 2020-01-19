@@ -25,18 +25,26 @@ public class SeatMapperImpl implements SeatMapper {
     }
 
     @Override
+    public List<Seat> selectByCinemaId(long cinemaId) {
+        try (SqlSession session = sessionFactory.openSession()) {
+            return getMapper(session).selectByCinemaId(cinemaId);
+        }
+    }
+
+    @Override
+    public List<Seat> selectByHallId(Long hallId) {
+        try (SqlSession session = sessionFactory.openSession()) {
+            return getMapper(session).selectByHallId(hallId);
+        }
+    }
+
+    @Override
     public Seat selectById(long id) {
         try (SqlSession session = sessionFactory.openSession()) {
             return getMapper(session).selectById(id);
         }
     }
 
-    @Override
-    public List<Seat> selectByStatus(Status status) {
-        try (SqlSession session = sessionFactory.openSession()) {
-            return getMapper(session).selectByStatus(status);
-        }
-    }
 
     @Override
     public void save(Seat seat) {
@@ -47,12 +55,13 @@ public class SeatMapperImpl implements SeatMapper {
     }
 
     @Override
-    public void update(long id, Status status) {
+    public void update(long id, long cinemaId, long hallId, Status status) {
         try (SqlSession session = sessionFactory.openSession()) {
-            getMapper(session).update(id, status);
+            getMapper(session).update(id, cinemaId, hallId, status);
             session.commit();
         }
     }
+
 
     @Override
     public void deleteAll() {

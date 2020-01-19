@@ -8,41 +8,48 @@ import cinema.reservation.domain.repository.SeatRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
-@Controller("/seat")
+@Controller
 public class SeatController {
-    private final SeatRepository seatRepository;
+    private final SeatRepository repository;
 
-    public SeatController(SeatRepository seatRepository) {
-        this.seatRepository = seatRepository;
+    public SeatController(SeatRepository repository) {
+        this.repository = repository;
     }
 
-    @Get("/")
+    @Get("/seats")
     public List<Seat> getAll() {
-        return seatRepository.findAll();
+        return repository.findAll();
     }
 
-    @Get("/{id}")
-    public Seat getById(long id) {
-        return seatRepository.findById(id)
-                .orElse(null);
+    @Get("/seats/{id}")
+    public HttpResponse<Seat> getById(Long id) {
+        return repository.findById(id)
+                .map(HttpResponse::ok)
+                .orElse(HttpResponse.notFound());
     }
 
-    @Get("/status={status}")
-    public List<Seat> getByStatus(Status status) {
-        return seatRepository.findByStatus(status);
+    @Get("/cinemas/{cinemaId}/seats")
+    public List<Seat> getByCinemaId(Long cinemaId) {
+        return repository.findByCinemaId(cinemaId);
     }
 
-    @Post("/")
-    public HttpResponse<Seat> save(@Body SaveSeatCommand command) {
-        Seat savedSeat = seatRepository.save(Status.fromString(command.getStatus()));
-        return HttpResponse.created(savedSeat);
+    @Get("/halls/{hallId}/seats")
+    public List<Seat> getByHallId(Long hallId) {
+        return repository.findByHallId(hallId);
     }
 
-    @Put("/")
-    public HttpResponse<Seat> update(@Body UpdateSeatCommand command) {
-        seatRepository.update(command.getId(), Status.fromString(command.getStatus()));
+    @Post("/cinemas/{cinemaId}/halls/{hallId}/seats/")
+    public HttpResponse<Seat> save(Long cinemaId, Long hallId, SaveSeatCommand body) {
+        Seat seat = repository.save(new Seat(cinemaId, hallId, Status.fromString(body.getStatus())));
+        return HttpResponse.created(seat);
+    }
+
+    @Put("/cinemas/{cinemaId}/halls/{hallId}/seats/")
+    public HttpResponse update(Long cinemaId, Long hallId, UpdateSeatCommand body) {
+        repository.update(cinemaId, hallId, body.getId(), Status.fromString(body.getStatus()));
         return HttpResponse.ok();
     }
 }
