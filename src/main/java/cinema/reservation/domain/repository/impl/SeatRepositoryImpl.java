@@ -23,25 +23,29 @@ public class SeatRepositoryImpl implements SeatRepository {
     }
 
     @Override
+    public List<Seat> findByCinemaId(Long cinemaId) {
+        return seatMapper.selectByCinemaId(cinemaId);
+    }
+
+    @Override
+    public List<Seat> findByHallId(Long hallId) {
+        return seatMapper.selectByHallId(hallId);
+    }
+
+    @Override
     public Optional<Seat> findById(long id) {
         return Optional.ofNullable(seatMapper.selectById(id));
     }
 
     @Override
-    public List<Seat> findByStatus(Status status) {
-        return seatMapper.selectByStatus(status);
-    }
-
-    @Override
-    public Seat save(Status status) {
-        Seat seat = new Seat(status);
+    public Seat save(Seat seat) {
         seatMapper.save(seat);
         return seat;
     }
 
     @Override
-    public void update(long id, Status status) {
-        seatMapper.update(id, status);
+    public void update(Long cinemaId, Long hallId, Long id, Status status) {
+        seatMapper.update(id, cinemaId, hallId, status);
     }
 
     @Override
